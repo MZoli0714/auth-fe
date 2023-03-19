@@ -1,0 +1,50 @@
+<div class="col-md-4 offset-md-4 mt-5">
+    <div class="alert alert-info">
+        Email: Enter your email.<br />
+        Password: Enter your password.<br />
+        *** Login to see the application.<br />
+        *** Click <a href="/register">here</a> to register.<br />
+    </div>
+    <div class="card">
+        <h4 class="card-header">Register</h4>
+        <div class="card-body">
+            <form [formGroup]="loginForm" (ngSubmit)="login()">
+
+                <div class="form-group" >
+                      <span class="p-field">
+                          <label for="email">Email</label>
+                        <input class="input" id="email"  type="text" pInputText formControlName="email"> 
+                    </span>
+                    <div *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)">
+                        <div *ngIf="loginForm.controls['email'].errors?.['email']">
+                            <p style="color:red; font-size:14px">Must be a valid email!</p>
+                        </div>
+                        <div *ngIf="loginForm.controls['email'].errors?.['required']">
+                            <p style="color:red; font-size:14px">Email cannot be empty!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <span class="p-field">
+                        <label for="password">Password</label>
+                        <p-password id="password" [toggleMask]="true" formControlName="password" [style]="{'width':'100%'}"
+                        [inputStyle]="{'width':'100%'}" ></p-password>
+                    </span>
+                    <div *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)">
+                        <div *ngIf="loginForm.controls['password'].errors?.['required']">
+                            <p style="color:red; font-size:14px">Password cannot be empty!</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <section class="button">
+                        <button  [disabled]="loginForm.controls['email'].errors || loginForm.controls['password'].errors" pButton type="submit" label="Login" ></button>
+                    </section>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

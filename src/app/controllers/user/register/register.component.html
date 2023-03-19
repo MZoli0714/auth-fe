@@ -1,0 +1,73 @@
+<div class="col-md-4 offset-md-4 mt-5">
+    <div class="alert alert-info">
+        Username: Must be individual and required.<br />
+        Email: Must be individual and required.<br />
+        Password: Must be more than 6 char, needs contain: number, upper char, special char.<br />
+        *** Already registered?<br />
+        *** Click <a href="/login">here</a> to login.<br />
+    </div>
+    <div class="card">
+        <h4 class="card-header">Register</h4>
+        <div class="card-body">
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+
+                <div class="form-group" >
+
+                    <span class="p-field">
+                        <label for="username">Username</label>
+                        <input class="input" id="username" type="text" pInputText formControlName="username"> 
+                    </span>
+
+                      <div *ngIf="registerForm.controls['username'].invalid && (registerForm.controls['username'].dirty || registerForm.controls['username'].touched)">
+                        <div *ngIf="registerForm.controls['username'].errors?.['required']">
+                            <p style="color:red; font-size:14px">Username cannot be empty!</p>
+                        </div>
+
+                        </div>
+                </div>
+
+                <div class="form-group" >
+
+                      <span class="p-field">
+                          <label for="email">Email</label>
+                        <input class="input" id="email"  type="text" pInputText formControlName="email"> 
+                    </span>
+
+                      <div *ngIf="registerForm.controls['email'].invalid && (registerForm.controls['email'].dirty || registerForm.controls['email'].touched)">
+                        <div *ngIf="registerForm.controls['email'].errors?.['required']">
+                            <p style="color:red; font-size:14px">Email cannot be empty!</p>
+                        </div>
+                        <div *ngIf="registerForm.controls['email'].errors?.['email']">
+                            <p style="color:red; font-size:14px">Must be a valid email!</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <span class="p-field">
+                        <label for="password">Password</label>
+                        <p-password id="password" [toggleMask]="true" formControlName="password" [style]="{'width':'100%'}"
+                        [inputStyle]="{'width':'100%'}" ></p-password>
+                    </span>
+
+                    <div *ngIf="registerForm.controls['password'].invalid && (registerForm.controls['password'].dirty || registerForm.controls['password'].touched)">
+                        <div *ngIf="registerForm.controls['password'].errors?.['required']">
+                            <p style="color:red; font-size:14px">Password cannot be empty!</p>
+                        </div>
+                        <div *ngIf="registerForm.controls['password'].errors?.['requiredPattern']">
+                            <p style="color:red; font-size:14px">Make sure you use special, uppercase and numbers!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <section class="button">
+                        <button [disabled]="registerForm.controls['password'].errors || registerForm.controls['email'].errors || registerForm.controls['username'].errors" pButton type="submit" label="Register" ></button>
+                    </section>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

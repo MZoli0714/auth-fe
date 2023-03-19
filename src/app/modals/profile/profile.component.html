@@ -1,0 +1,69 @@
+<p-dialog [header]="userName" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false">
+        <div class="card">
+            <h4 class="card-header">Edit your profile</h4>
+            <div class="card-body">
+                <form [formGroup]="updateForm" (ngSubmit)="update()">
+
+                    <div class="container text-center">
+                        <div class="row">
+                          <div class="col-6 col-sm-4">
+                            <div class="form-group">
+                                <span class="p-field">
+                                  <label for="email">Email</label>
+                                  <input [style]="{'width':'100%'}" class="input" id="email" type="text" pInputText formControlName="email"> 
+                                </span>
+                                <div *ngIf="updateForm.controls['email'].invalid && (updateForm.controls['email'].dirty || updateForm.controls['email'].touched)">
+                                    <div *ngIf="updateForm.controls['email'].errors?.['email']">
+                                        <p style="color:red; font-size:14px">Must be a valid email!</p>
+                                    </div>
+                                    <div *ngIf="updateForm.controls['email'].errors?.['required']">
+                                        <p style="color:red; font-size:14px">Email cannot be empty!</p>
+                                    </div>
+                                </div>
+                              </div>
+                          </div>
+                          <div class="col-6 col-sm-4">
+                            <div class="form-group">
+                                <span class="p-field">
+                                  <label for="username">Username</label>
+                                  <input [style]="{'width':'100%'}" class="input" id="username"  type="text" pInputText formControlName="username"> 
+                                </span>
+                                <div *ngIf="updateForm.controls['username'].invalid && (updateForm.controls['username'].dirty || updateForm.controls['username'].touched)">
+                                    <div *ngIf="updateForm.controls['username'].errors?.['required']">
+                                        <p style="color:red; font-size:14px">Username cannot be empty!</p>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                          <div class="w-100 d-none d-md-block"></div>
+                          <div class="col-6 col-sm-4">
+                            <div class="form-group">
+                                <span class="p-field">
+                                  <label for="bio">Bio</label>
+                                  <input [style]="{'width':'100%'}" class="input" id="bio"  type="text" pInputText formControlName="bio"> 
+                                </span>
+                            </div>
+                          </div>
+                          <div class="col-6 col-sm-4">
+                            <div class="form-group">
+                                <span class="p-field">
+                                  <label for="image">Image</label>
+                                  <input [style]="{'width':'100%'}" class="input" id="image"  type="text" pInputText formControlName="image"> 
+                                </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-6">
+                            <p-button [disabled]="updateForm.controls['email'].errors || updateForm.controls['username'].errors ? true : false" icon="pi pi-check" type="submit" label="Update" class="p-button-text"></p-button>
+                        </div>
+                        <div class="col-6">
+                            <p-button icon="pi pi-times" (click)="displayModal=false" label="Cancel"></p-button>
+                        </div>
+                      </div>
+                </form>
+            </div>
+        </div>
+</p-dialog>

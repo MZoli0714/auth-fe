@@ -1,0 +1,193 @@
+<div class="d-flex justify-content-center" style="padding-top:1rem">
+    <div class="card" style="width:80%; ">
+      <p-table #dt1 [value]="articles?.articles" dataKey="id" styleClass="p-datatable-striped" [paginator]="true" [rows]="8" [showCurrentPageReport]="true"
+        [globalFilterFields]="['id', 'title']" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"  [rowsPerPageOptions]="[8,16,24]" [totalRecords]="articles?.articles.length" >
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-ai-center">
+                <div class="p-d-flex p-ai-center" style="flex-grow: 1;">
+                  <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+                  <span style="float:right" class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')" placeholder="Filter" />
+                  </span>
+                </div>
+              </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="id" style="width:8%">Id <p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="title" style="width:10%">Title <p-sortIcon field="title"></p-sortIcon></th>
+            <th style="width:10%">Description</th>
+            <th style="width:10%">Body</th>
+            <th style="width:10%">TagList</th>
+            <th style="width:10%">Slug</th>
+            <th style="width:10%">Author</th>
+            <th style="width:10%">Created</th>
+            <th style="width:10%">Updated</th>
+            <th style="width:8%">SUMFav</th>
+            <th style="width:15%">Action</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-article>
+          <tr>
+            <td>{{article.id}}</td>
+            <td>{{article.title}}</td>
+            <td>{{article.description }}</td>
+            <td>{{article.body}}</td>
+            <td>{{article.tagList}}</td>
+            <td>{{article.slug}}</td>
+            <td>{{article.author?.username}}</td>            
+            <td>{{article.created | date}}</td>
+            <td>{{article.updated | date}}</td>
+            <td>{{article.favoriteCount}}</td>
+            <td>
+              <a style="color:rgb(255, 119, 0)" title="Favorite" (click)="favorite(article.slug)"><i class="pi pi-star"></i></a>
+              <a style="color:rgb(0, 255, 72)" title="Edit" (click)="openUpdate(article.slug)"><i class="pi pi-pencil"></i></a>
+              <a style="color:red" title="Delete" (click)="confirm($event, article.slug)"><i class="pi pi-trash"></i></a>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+<p-confirmPopup></p-confirmPopup>
+ 
+
+<p-dialog [(visible)]="productDialog" [style]="{width: '800px'}" header="Add new article" [modal]="true" styleClass="p-fluid">
+    <div class="col-md-4 offset-md-4 mt-5">
+        <div class="card">
+            <h4 class="card-header">Artice</h4>
+            <div class="card-body">
+                <form [formGroup]="articleEditForm" (ngSubmit)="onSubmit()">
+                    <div class="form-group" >
+                        <span class="p-field">
+                            <label for="title">Title</label>
+                            <input class="input" id="title" type="text" pInputText formControlName="title"> 
+                        </span>
+                        <div *ngIf="articleEditForm.controls['title'].invalid && (articleEditForm.controls['title'].dirty || articleEditForm.controls['title'].touched)">
+                          <div *ngIf="articleEditForm.controls['title'].errors?.['required']">
+                              <p style="color:red; font-size:14px">Title cannot be empty!</p>
+                          </div>
+                      </div>
+                    </div>
+    
+                    <div class="form-group" >
+    
+                          <span class="p-field">
+                              <label for="description">Description</label>
+                            <input class="input" id="description"  type="text" pInputText formControlName="description"> 
+                        </span>
+                        <div *ngIf="articleEditForm.controls['description'].invalid && (articleEditForm.controls['description'].dirty || articleEditForm.controls['description'].touched)">
+                          <div *ngIf="articleEditForm.controls['description'].errors?.['required']">
+                              <p style="color:red; font-size:14px">Description cannot be empty!</p>
+                          </div>
+                      </div>
+                    </div>
+    
+                    <div class="form-group" >
+    
+                        <span class="p-field">
+                            <label for="body">Body</label>
+                          <input class="input" id="body"  type="text" pInputText formControlName="body"> 
+                      </span>
+                      <div *ngIf="articleEditForm.controls['body'].invalid && (articleEditForm.controls['body'].dirty || articleEditForm.controls['body'].touched)">
+                        <div *ngIf="articleEditForm.controls['body'].errors?.['required']">
+                            <p style="color:red; font-size:14px">Body cannot be empty!</p>
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group" >
+    
+                    <span class="p-field">
+                        <label for="tagList">Taglist</label>
+                      <input class="input" id="tagList"  type="text" pInputText formControlName="tagList"> 
+                  </span>
+                  <div *ngIf="articleEditForm.controls['tagList'].invalid && (articleEditForm.controls['tagList'].dirty || articleEditForm.controls['tagList'].touched)">
+                    <div *ngIf="articleEditForm.controls['tagList'].errors?.['required']">
+                        <p style="color:red; font-size:14px">Taglist cannot be empty!</p>
+                    </div>
+                </div>
+              </div>
+    
+                    <div class="form-group">
+                        <section class="button">
+                          <p-button [disabled]="articleEditForm.controls['description'].errors || articleEditForm.controls['tagList'].errors || articleEditForm.controls['title'].errors || articleEditForm.controls['body'].errors ? true : false" icon="pi pi-check" type="submit" label="Create" class="p-button-text"></p-button>
+                        </section>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+
+<p-dialog [(visible)]="articleupdateDIalog" [style]="{width: '800px'}" header="Update article" [modal]="true" styleClass="p-fluid">
+  <div class="col-md-4 offset-md-4 mt-5">
+      <div class="card">
+          <h4 class="card-header">Artice</h4>
+          <div class="card-body">
+              <form [formGroup]="articleUpdateEditForm" (ngSubmit)="updateOnSubmit()">
+                  <div class="form-group" >
+                      <span class="p-field">
+                          <label for="title">Title</label>
+                          <input class="input" id="title" type="text" pInputText formControlName="title"> 
+                      </span>
+                      <div *ngIf="articleUpdateEditForm.controls['title'].invalid && (articleUpdateEditForm.controls['title'].dirty || articleUpdateEditForm.controls['title'].touched)">
+                        <div *ngIf="articleUpdateEditForm.controls['title'].errors?.['required']">
+                            <p style="color:red; font-size:14px">Title cannot be empty!</p>
+                        </div>
+                    </div>
+                  </div>
+  
+                  <div class="form-group" >
+  
+                        <span class="p-field">
+                            <label for="description">Description</label>
+                          <input class="input" id="description"  type="text" pInputText formControlName="description"> 
+                      </span>
+                      <div *ngIf="articleUpdateEditForm.controls['description'].invalid && (articleUpdateEditForm.controls['description'].dirty || articleUpdateEditForm.controls['description'].touched)">
+                        <div *ngIf="articleUpdateEditForm.controls['description'].errors?.['required']">
+                            <p style="color:red; font-size:14px">Description cannot be empty!</p>
+                        </div>
+                    </div>
+                  </div>
+  
+                  <div class="form-group" >
+  
+                      <span class="p-field">
+                          <label for="body">Body</label>
+                        <input class="input" id="body"  type="text" pInputText formControlName="body"> 
+                    </span>
+                    <div *ngIf="articleUpdateEditForm.controls['body'].invalid && (articleUpdateEditForm.controls['body'].dirty || articleUpdateEditForm.controls['body'].touched)">
+                      <div *ngIf="articleUpdateEditForm.controls['body'].errors?.['required']">
+                          <p style="color:red; font-size:14px">Body cannot be empty!</p>
+                      </div>
+                  </div>
+                </div>
+
+                <div class="form-group" >
+  
+                  <span class="p-field">
+                      <label for="tagList">Taglist</label>
+                    <input class="input" id="tagList"  type="text" pInputText formControlName="tagList"> 
+                </span>
+                <div *ngIf="articleUpdateEditForm.controls['tagList'].invalid && (articleUpdateEditForm.controls['tagList'].dirty || articleUpdateEditForm.controls['tagList'].touched)">
+                  <div *ngIf="articleUpdateEditForm.controls['tagList'].errors?.['required']">
+                      <p style="color:red; font-size:14px">Taglist cannot be empty!</p>
+                  </div>
+              </div>
+            </div>
+                  <div class="form-group">
+                      <section class="button">
+                        <p-button [disabled]="articleUpdateEditForm.controls['description'].errors || articleUpdateEditForm.controls['tagList'].errors || articleUpdateEditForm.controls['title'].errors || articleUpdateEditForm.controls['body'].errors ? true : false" icon="pi pi-check" type="submit" label="Update" class="p-button-text"></p-button>
+                      </section>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</p-dialog>
+
+   

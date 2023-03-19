@@ -1,0 +1,40 @@
+<p-dialog [header]="profileUserName" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false">
+        <div class="card">
+            <h4 class="card-header">Profile details</h4>
+            <div *ngIf="profileUser" class="card-body">
+                <div class="container text-left">
+                    <div class="row">
+                        <div class="col-6 col-sm-4">
+                            <span>
+                                <p>Bio: {{profileUser.profile.bio}}</p>
+                            </span>
+                            <span>
+                                <p>Username: {{profileUser.profile.username}}</p>
+                            </span>
+                            <span>
+                                <p>Image: {{profileUser.profile.image}}</p>
+                            </span>
+                            <span *ngIf="profileUser.profile.following === false; else elseCondition">
+                                <p>Following: <a style="color:red">{{profileUser.profile.following}}</a></p>
+                            </span>
+                            <ng-template #elseCondition>
+                                <p>Following: <a style="color:green">{{profileUser.profile.following}}</a></p>
+                            </ng-template>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div *ngIf="profileUser['profile'].username" class="row">
+                    <div class="col-6">
+                        <p-button [disabled]="profileUser['profile'].following ? true : false" (click)="followUser(profileUser.profile.username)" icon="pi pi-thumbs-up" label="Follow" class="p-button-text"></p-button>
+                    </div>
+                    <div class="col-6">
+                        <p-button [disabled]="profileUser['profile'].following ? false : true" (click)="unFollowUser(profileUser.profile.username)" icon="pi pi-thumbs-down" label="Unfollow"></p-button>
+                    </div>
+                </div>   
+            </div>
+        </div>
+</p-dialog>
+
